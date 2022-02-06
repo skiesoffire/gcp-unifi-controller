@@ -65,8 +65,9 @@ fi
 # Create the config.gateway.json using version stored in bucket.
 # Checks gateway-json-url key for gcp storage url
 #
-if [ ${gateway-json-url} ]; then
-	gsutil cp ${gateway-json-url} /var/lib/unifi/config.gateway.json
+gatewayjsonurl=$(curl -fs -H "Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/attributes/gateway-json-url")
+if [ ${gatewayjsonurl} ]; then
+	gsutil cp ${gatewayjsonurl} /var/lib/unifi/config.gateway.json
 	echo "config.gateway.json file has been staged."
 fi
 ###########################################################
