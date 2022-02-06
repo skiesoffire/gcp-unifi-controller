@@ -60,7 +60,15 @@ if [ ${ddns} ]; then
 	curl -fs ${ddns}
 	echo "Dynamic DNS accessed"
 fi
-
+###########################################################
+#
+# Create the config.gateway.json using version stored in bucket.
+# Checks gateway-json-url key for gcp storage url
+#
+if [ ${gateway-json-url} ]; then
+	gsutil cp ${gateway-json-url} /var/lib/unifi/config.gateway.json
+	echo "config.gateway.json file has been staged."
+fi
 ###########################################################
 #
 # Create a swap file for small memory instances and increase /run
