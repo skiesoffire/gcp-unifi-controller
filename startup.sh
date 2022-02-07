@@ -68,6 +68,7 @@ fi
 gatewayjsonurl=$(curl -fs -H "Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/attributes/gateway-json-url")
 if [ ${gatewayjsonurl} ]; then
 	gsutil cp ${gatewayjsonurl} /var/lib/unifi/config.gateway.json
+	chown unifi:unifi /var/lib/unifi/config.gateway.json
 	echo "config.gateway.json file has been staged."
 fi
 ###########################################################
