@@ -304,8 +304,23 @@ fi
 # Set up daily stackdriver maintenance period starting at 00:00 for 15 minutes
 # Your Auto-Backup should be set to run daily at 00:00 (manually via GUI)
 #
+if [ ! -f /usr/local/sbin/unifi-stackdriver-maintenance.sh ]; then
+	cat > /usr/local/sbin/unifi-stackdriver-maintenance.sh <<_EOF
+#! /bin/sh
 stackdriverPolicy=$(curl -fs -H "Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/attributes/stackdriverpolicy")
-if [ ${stackdriverPolicy} ]; then
+# disable monitoring for 15 mins.
+/usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --no-enabled
+if [ $? -ne 0 ]; then exit 1; fi;
+sleep 900;
+
+# reenable monitoring
+/usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --enabled
+if [ $? -ne 0 ]; then exit 1; fi;
+exit 0;
+_EOF
+fi
+
+if [ ! -f /etc/systemd/system/unifi-stackdriver-maintenance.service ]; then
 	cat > /etc/systemd/system/unifi-stackdriver-maintenance.service <<_EOF
 [Unit]
 Description=Daily stackdriver maintenance period
@@ -313,7 +328,7 @@ After=network-online.target
 Wants=network-online.target
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --no-enabled ; sleep 900 ; /usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --enabled
+ExecStart=/bin/sh /usr/local/sbin/unifi-stackdriver-maintenance.sh
 _EOF
 
 	cat > /etc/systemd/system/unifi-stackdriver-maintenance.timer <<_EOF
