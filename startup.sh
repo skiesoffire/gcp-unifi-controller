@@ -301,7 +301,37 @@ fi
 
 ###########################################################
 #
-# Set up daily backup to a bucket after 01:00
+# Set up daily stackdriver maintenance period starting at 00:00 for 15 minutes
+# Your Auto-Backup should be set to run daily at 00:00 (manually via GUI)
+#
+stackdriverPolicy=$(curl -fs -H "Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/attributes/stackdriverpolicy")
+if [ ${stackdriverPolicy} ]; then
+	cat > /etc/systemd/system/unifi-stackdriver-maintenance.service <<_EOF
+[Unit]
+Description=Daily stackdriver maintenance period
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --no-enabled; sleep 900; /usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --no-enabled
+_EOF
+
+	cat > /etc/systemd/system/unifi-backup.timer <<_EOF
+[Unit]
+Description=Daily stackdriver maintenance timer
+[Timer]
+OnCalendar=00:00
+[Install]
+WantedBy=timers.target
+_EOF
+	systemctl daemon-reload
+	systemctl start unifi-stackdriver-maintenance.timer
+	echo "stackdriver maintenance windows set up"
+fi
+
+###########################################################
+#
+# Set up daily rsync of auto-backup to a bucket after 01:00
 #
 bucket=$(curl -fs -H "Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/attributes/bucket")
 if [ ${bucket} ]; then
