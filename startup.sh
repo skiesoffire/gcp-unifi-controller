@@ -313,7 +313,7 @@ After=network-online.target
 Wants=network-online.target
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --no-enabled; sleep 900; /usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --no-enabled
+ExecStart=/usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --no-enabled ; sleep 900 ; /usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --enabled
 _EOF
 
 	cat > /etc/systemd/system/unifi-stackdriver-maintenance.timer <<_EOF
