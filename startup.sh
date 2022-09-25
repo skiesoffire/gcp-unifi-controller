@@ -316,7 +316,7 @@ Type=oneshot
 ExecStart=/usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --no-enabled; sleep 900; /usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --no-enabled
 _EOF
 
-	cat > /etc/systemd/system/unifi-backup.timer <<_EOF
+	cat > /etc/systemd/system/unifi-stackdriver-maintenance.timer <<_EOF
 [Unit]
 Description=Daily stackdriver maintenance timer
 [Timer]
