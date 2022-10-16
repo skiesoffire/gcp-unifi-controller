@@ -342,7 +342,7 @@ OnCalendar=00:00
 WantedBy=timers.target
 _EOF
 	systemctl daemon-reload
-	systemctl start unifi-stackdriver-maintenance.timer
+	systemctl enable unifi-stackdriver-maintenance.timer --now
 	echo "stackdriver maintenance windows set up"
 fi
 
