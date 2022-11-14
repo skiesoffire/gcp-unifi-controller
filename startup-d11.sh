@@ -602,7 +602,7 @@ if [ ! -d /etc/letsencrypt/live/${dnsname} ]; then
 	fi
 fi
 # Install GCP Ops agent
-apt-get -qq install -y google-cloud-ops-agent >/dev/null
+#apt-get -qq install -y google-cloud-ops-agent >/dev/null
 
 # Signal in logs startup completed
 echo startup script completed!
