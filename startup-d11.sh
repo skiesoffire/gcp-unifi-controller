@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# Version 1.4.3
+# Version 2.0.0
 # This is a startup script for UniFi Controller on Debian based Google Compute Engine instances.
 # For instructions and how-to:  https://metis.fi/en/2018/02/unifi-on-gcp/
 # For comments and code walkthrough:  https://metis.fi/en/2018/02/gcp-unifi-code/
@@ -112,6 +112,9 @@ fi
 # Install stuff
 #
 
+# set to non-interactive debian
+export DEBIAN_FRONTEND="noninteractive"
+
 # Required preliminiaries
 if [ ! -f /usr/share/misc/apt-upgraded-1 ]; then
 	export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn    # For CGP packages
@@ -211,8 +214,8 @@ fi
 #
 # APT maintenance (runs only at reboot)
 #
-apt -qq autoremove --purge
-apt -qq clean
+apt-get -qq autoremove --purge
+apt-get -qq clean
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
 ###########################################################
@@ -604,4 +607,16 @@ curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
 sudo bash add-google-cloud-ops-agent-repo.sh --also-install
 
 # Signal in logs startup completed
-echo startup script completed.
+echo startup script completed!
+
+# show all installed versions for debugging
+echo running version report...
+echo essentials:
+java -version
+mongod -version
+echo unifi: $(/usr/lib/unifi/bin/ubnt-apttool showpkgver unifi)
+
+echo secondary:
+dpkg-query -W haveged lighttpd ca-certificates fail2ban
+
+echo report complete.
