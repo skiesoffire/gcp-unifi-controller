@@ -98,14 +98,14 @@ fi
 #
 # Add backports if it doesn't exist
 #
-release=$(lsb_release -a 2>/dev/null | grep "^Codename:" | cut -f 2)
-if [ ${release} ] && [ ! -f /etc/apt/sources.list.d/backports.list ]; then
-	cat > /etc/apt/sources.list.d/backports.list <<_EOF
-deb http://deb.debian.org/debian/ ${release}-backports main
-deb-src http://deb.debian.org/debian/ ${release}-backports main
-_EOF
-	echo "Backports (${release}) added to APT sources"
-fi
+#release=$(lsb_release -a 2>/dev/null | grep "^Codename:" | cut -f 2)
+#if [ ${release} ] && [ ! -f /etc/apt/sources.list.d/backports.list ]; then
+#	cat > /etc/apt/sources.list.d/backports.list <<_EOF
+#deb http://deb.debian.org/debian/ ${release}-backports main
+#deb-src http://deb.debian.org/debian/ ${release}-backports main
+#_EOF
+#	echo "Backports (${release}) added to APT sources"
+#fi
 
 ###########################################################
 #
