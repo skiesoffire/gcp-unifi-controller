@@ -138,17 +138,20 @@ if (apt-get -qq install -y -t ${release}-backports certbot >/dev/null) || (apt-g
 fi
 
 # UniFi needs https support, custom repo and APT update first
-apt-get -qq install -y apt-transport-https >/dev/null
+apt-get -qq install -y ca-certificates apt-transport-https >/dev/null
 unifi=$(dpkg-query -W --showformat='${Status}\n' unifi 2>/dev/null)
 if [ "x${unifi}" != "xinstall ok installed" ]; then
+	#Unifi repo
 	echo "deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti" > /etc/apt/sources.list.d/unifi.list
 	curl -Lfs -o /etc/apt/trusted.gpg.d/unifi-repo.gpg https://dl.ubnt.com/unifi/unifi-repo.gpg
 
+	#Mongo3.6 repo
 	echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/3.6 main" > /etc/apt/sources.list.d/mongodb-org-3.6.list
 	curl -Lfs https://www.mongodb.org/static/pgp/server-3.6.asc | sudo apt-key add -
-
-	echo "deb [signed-by=/usr/share/keyrings/adoptopenjdk-archive-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb bullseye main" > /etc/apt/sources.list.d/adoptopenjdk.list
-	curl -Lfs -o /etc/apt/trusted.gpg.d/adoptopenjdk.gpg https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
+	
+	#Java 8 repo & install
+	curl -fsSL "https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public" | sudo gpg --dearmor --yes -o /usr/share/keyrings/adoptopenjdk-archive-keyring.gpg
+	echo "deb [signed-by=/usr/share/keyrings/adoptopenjdk-archive-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb bullseye main" | sudo tee /etc/apt/sources.list.d/adoptopenjdk.list
 	apt-get -qq update -y >/dev/null
        	apt-get -qq install -y adoptopenjdk-8-hotspot >/dev/null
 
@@ -596,4 +599,5 @@ if [ ! -d /etc/letsencrypt/live/${dnsname} ]; then
 		systemctl start certbotrun.timer
 	fi
 fi
-
+# Signal in logs startup completed
+echo startup script completed.
