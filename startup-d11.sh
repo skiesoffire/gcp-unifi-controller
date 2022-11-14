@@ -121,7 +121,6 @@ if [ ! -f /usr/share/misc/apt-upgraded-1 ]; then
 	curl -Lfs https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -    # For CGP packages
 	apt-get -qq update -y >/dev/null
 	DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade -y >/dev/null    # GRUB upgrades require special flags
-	rm /usr/share/misc/apt-upgraded    # Old flag file
 	touch /usr/share/misc/apt-upgraded-1
 	echo "System upgraded"
 fi
