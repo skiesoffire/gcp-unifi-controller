@@ -135,7 +135,7 @@ if [ "x${haveged}" != "xinstall ok installed" ]; then
 fi
 certbot=$(dpkg-query -W --showformat='${Status}\n' certbot 2>/dev/null)
 if [ "x${certbot}" != "xinstall ok installed" ]; then
-if (apt-get -qq install -y -t ${release}-backports certbot >/dev/null) || (apt-get -qq install -y certbot >/dev/null); then
+if (apt-get -qq install -y certbot >/dev/null) || (apt-get -qq install -y certbot >/dev/null); then
 		echo "CertBot installed"
 	fi
 fi
