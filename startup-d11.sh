@@ -237,32 +237,32 @@ fi
 #
 # Set up unattended upgrades after 04:00 with automatic reboots
 #
-if [ ! -f /etc/apt/apt.conf.d/51unattended-upgrades-unifi ]; then
-	cat > /etc/apt/apt.conf.d/51unattended-upgrades-unifi <<_EOF
-Acquire::AllowReleaseInfoChanges "true";
-Unattended-Upgrade::Origins-Pattern {
-	"o=Debian,a=stable";
-	"c=ubiquiti";
-};
-Unattended-Upgrade::Remove-Unused-Dependencies "true";
-Unattended-Upgrade::Automatic-Reboot "true";
-_EOF
-
-	cat > /etc/systemd/system/timers.target.wants/apt-daily-upgrade.timer <<_EOF
-[Unit]
-Description=Daily apt upgrade and clean activities
-After=apt-daily.timer
-[Timer]
-OnCalendar=4:00
-RandomizedDelaySec=30m
-Persistent=true
-[Install]
-WantedBy=timers.target
-_EOF
-	systemctl daemon-reload
-	systemctl reload-or-restart unattended-upgrades
-	echo "Unattended upgrades set up"
-fi
+#if [ ! -f /etc/apt/apt.conf.d/51unattended-upgrades-unifi ]; then
+#	cat > /etc/apt/apt.conf.d/51unattended-upgrades-unifi <<_EOF
+#Acquire::AllowReleaseInfoChanges "true";
+#Unattended-Upgrade::Origins-Pattern {
+#	"o=Debian,a=stable";
+#	"c=ubiquiti";
+#};
+#Unattended-Upgrade::Remove-Unused-Dependencies "true";
+#Unattended-Upgrade::Automatic-Reboot "true";
+#_EOF
+#
+#	cat > /etc/systemd/system/timers.target.wants/apt-daily-upgrade.timer <<_EOF
+#[Unit]
+#Description=Daily apt upgrade and clean activities
+#After=apt-daily.timer
+#[Timer]
+#OnCalendar=4:00
+#RandomizedDelaySec=30m
+#Persistent=true
+#[Install]
+#WantedBy=timers.target
+#_EOF
+#	systemctl daemon-reload
+#	systemctl reload-or-restart unattended-upgrades
+#	echo "Unattended upgrades set up"
+#fi
 
 ###########################################################
 #
