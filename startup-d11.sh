@@ -154,9 +154,9 @@ if [ "x${unifi}" != "xinstall ok installed" ]; then
 	#Java 8 repo & install (no longer needed. latest unifi supports java 11)
 	#curl -fsSL "https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public" | sudo gpg --dearmor --yes -o /usr/share/keyrings/adoptopenjdk-archive-keyring.gpg
 	#echo "deb [signed-by=/usr/share/keyrings/adoptopenjdk-archive-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb bullseye main" | sudo tee /etc/apt/sources.list.d/adoptopenjdk.list
-	#apt-get -qq update -y >/dev/null
        	#apt-get -qq install -y adoptopenjdk-8-hotspot >/dev/null
-
+	
+	apt-get -qq update -y >/dev/null
 	if apt-get -qq install -y unifi >/dev/null; then
 		echo "Unifi installed"
 	fi
