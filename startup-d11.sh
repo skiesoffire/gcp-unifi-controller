@@ -151,11 +151,11 @@ if [ "x${unifi}" != "xinstall ok installed" ]; then
 	echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/3.6 main" > /etc/apt/sources.list.d/mongodb-org-3.6.list
 	curl -Lfs https://www.mongodb.org/static/pgp/server-3.6.asc | sudo apt-key add -
 	
-	#Java 8 repo & install
-	curl -fsSL "https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public" | sudo gpg --dearmor --yes -o /usr/share/keyrings/adoptopenjdk-archive-keyring.gpg
-	echo "deb [signed-by=/usr/share/keyrings/adoptopenjdk-archive-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb bullseye main" | sudo tee /etc/apt/sources.list.d/adoptopenjdk.list
-	apt-get -qq update -y >/dev/null
-       	apt-get -qq install -y adoptopenjdk-8-hotspot >/dev/null
+	#Java 8 repo & install (no longer needed. latest unifi supports java 11)
+	#curl -fsSL "https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public" | sudo gpg --dearmor --yes -o /usr/share/keyrings/adoptopenjdk-archive-keyring.gpg
+	#echo "deb [signed-by=/usr/share/keyrings/adoptopenjdk-archive-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb bullseye main" | sudo tee /etc/apt/sources.list.d/adoptopenjdk.list
+	#apt-get -qq update -y >/dev/null
+       	#apt-get -qq install -y adoptopenjdk-8-hotspot >/dev/null
 
 	if apt-get -qq install -y unifi >/dev/null; then
 		echo "Unifi installed"
