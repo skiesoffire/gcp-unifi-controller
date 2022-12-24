@@ -384,6 +384,8 @@ _EOF
 	systemctl start unifi-backup.timer
 	echo "Backups to ${bucket} set up"
 fi
+# also sync backup files on startup so we can restore from backup on first boot
+/usr/bin/gsutil rsync -r -d gs://$bucket /var/lib/unifi/backup
 
 ###########################################################
 #
