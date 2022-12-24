@@ -368,7 +368,7 @@ After=network-online.target
 Wants=network-online.target
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/gsutil rsync -r -d /var/lib/unifi/backup gs://$bucket
+ExecStart=/usr/bin/gsutil -m rsync -r -d /var/lib/unifi/backup gs://$bucket
 _EOF
 
 	cat > /etc/systemd/system/unifi-backup.timer <<_EOF
@@ -385,7 +385,7 @@ _EOF
 	echo "Backups to ${bucket} set up"
 fi
 # also sync backup files on startup so we can restore from backup on first boot
-/usr/bin/gsutil rsync -r -d gs://$bucket /var/lib/unifi/backup
+/usr/bin/gsutil -m rsync -r -d gs://$bucket /var/lib/unifi/backup
 
 ###########################################################
 #
