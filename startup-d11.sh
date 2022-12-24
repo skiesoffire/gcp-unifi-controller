@@ -116,14 +116,14 @@ fi
 export DEBIAN_FRONTEND="noninteractive"
 
 # Required preliminiaries
-if [ ! -f /usr/share/misc/apt-upgraded-1 ]; then
-	export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn    # For CGP packages
-	curl -Lfs https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -    # For CGP packages
-	apt-get -qq update -y >/dev/null
-	DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade -y >/dev/null    # GRUB upgrades require special flags
-	touch /usr/share/misc/apt-upgraded-1
-	echo "System upgraded"
-fi
+#if [ ! -f /usr/share/misc/apt-upgraded-1 ]; then
+#	export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn    # For CGP packages
+#	curl -Lfs https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -    # For CGP packages
+#	apt-get -qq update -y >/dev/null
+#	DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade -y >/dev/null    # GRUB upgrades require special flags
+#	touch /usr/share/misc/apt-upgraded-1
+#	echo "System upgraded"
+#fi
 
 # HAVEGEd is straightforward
 haveged=$(dpkg-query -W --showformat='${Status}\n' haveged 2>/dev/null)
