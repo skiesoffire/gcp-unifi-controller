@@ -603,9 +603,36 @@ if [ ! -d /etc/letsencrypt/live/${dnsname} ]; then
 		systemctl start certbotrun.timer
 	fi
 fi
-# Install GCP Ops agent
+# Install GCP Ops agent & configure
 curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
 sudo bash add-google-cloud-ops-agent-repo.sh --also-install
+
+if [ -f /etc/google-cloud-ops-agent/config.yaml ]; then
+sudo tee /etc/google-cloud-ops-agent/config.yaml > /dev/null << EOF
+metrics:
+  receivers:
+    mongodb:
+      type: mongodb
+      insecure: true
+      endpoint: localhost:27117
+  service:
+    pipelines:
+      mongo:
+        receivers: [mongodb]
+logging:
+  receivers:
+    mongodb:
+      type: mongodb
+      include_paths: [/var/log/unifi/mongod.log*]
+  service:
+    pipelines:
+      mongo:
+        receivers: [mongodb]
+EOF
+
+sudo service google-cloud-ops-agent restart
+sleep 30
+fi
 
 # Signal in logs startup completed
 echo startup script completed!
