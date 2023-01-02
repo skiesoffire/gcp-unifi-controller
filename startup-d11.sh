@@ -96,34 +96,11 @@ fi
 
 ###########################################################
 #
-# Add backports if it doesn't exist
-#
-#release=$(lsb_release -a 2>/dev/null | grep "^Codename:" | cut -f 2)
-#if [ ${release} ] && [ ! -f /etc/apt/sources.list.d/backports.list ]; then
-#	cat > /etc/apt/sources.list.d/backports.list <<_EOF
-#deb http://deb.debian.org/debian/ ${release}-backports main
-#deb-src http://deb.debian.org/debian/ ${release}-backports main
-#_EOF
-#	echo "Backports (${release}) added to APT sources"
-#fi
-
-###########################################################
-#
 # Install stuff
 #
 
 # set to non-interactive debian
 export DEBIAN_FRONTEND="noninteractive"
-
-# Required preliminiaries
-#if [ ! -f /usr/share/misc/apt-upgraded-1 ]; then
-#	export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn    # For CGP packages
-#	curl -Lfs https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -    # For CGP packages
-#	apt-get -qq update -y >/dev/null
-#	DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade -y >/dev/null    # GRUB upgrades require special flags
-#	touch /usr/share/misc/apt-upgraded-1
-#	echo "System upgraded"
-#fi
 
 # HAVEGEd is straightforward
 haveged=$(dpkg-query -W --showformat='${Status}\n' haveged 2>/dev/null)
@@ -235,37 +212,6 @@ fi
 
 ###########################################################
 #
-# Set up unattended upgrades after 04:00 with automatic reboots
-#
-#if [ ! -f /etc/apt/apt.conf.d/51unattended-upgrades-unifi ]; then
-#	cat > /etc/apt/apt.conf.d/51unattended-upgrades-unifi <<_EOF
-#Acquire::AllowReleaseInfoChanges "true";
-#Unattended-Upgrade::Origins-Pattern {
-#	"o=Debian,a=stable";
-#	"c=ubiquiti";
-#};
-#Unattended-Upgrade::Remove-Unused-Dependencies "true";
-#Unattended-Upgrade::Automatic-Reboot "true";
-#_EOF
-#
-#	cat > /etc/systemd/system/timers.target.wants/apt-daily-upgrade.timer <<_EOF
-#[Unit]
-#Description=Daily apt upgrade and clean activities
-#After=apt-daily.timer
-#[Timer]
-#OnCalendar=4:00
-#RandomizedDelaySec=30m
-#Persistent=true
-#[Install]
-#WantedBy=timers.target
-#_EOF
-#	systemctl daemon-reload
-#	systemctl reload-or-restart unattended-upgrades
-#	echo "Unattended upgrades set up"
-#fi
-
-###########################################################
-#
 # Set up automatic repair for broken MongoDB on boot
 #
 if [ ! -f /usr/local/sbin/unifidb-repair.sh ]; then
@@ -307,53 +253,6 @@ _EOF
 #	systemctl enable unifidb-repair.service
 #	echo "Unifi DB autorepair set up"
 #fi
-
-###########################################################
-#
-# Set up daily stackdriver maintenance period starting at 00:00 for 15 minutes
-# Your Auto-Backup should be set to run daily at 00:00 (manually via GUI)
-#
-stackdriverPolicy=$(curl -fs -H "Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/attributes/stackdriverpolicy")
-if [ ! -f /usr/local/sbin/unifi-stackdriver-maintenance.sh ]; then
-	cat > /usr/local/sbin/unifi-stackdriver-maintenance.sh <<_EOF
-#! /bin/sh
-# disable monitoring for 15 mins.
-/usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --no-enabled
-if [ $? -ne 0 ]; then exit 1; fi;
-sleep 900;
-
-# reenable monitoring
-/usr/bin/gcloud alpha monitoring policies update ${stackdriverPolicy} --enabled
-if [ $? -ne 0 ]; then exit 1; fi;
-exit 0;
-_EOF
-
-chmod a+x /usr/local/sbin/unifi-stackdriver-maintenance.sh
-fi
-
-if [ ! -f /etc/systemd/system/unifi-stackdriver-maintenance.service ]; then
-	cat > /etc/systemd/system/unifi-stackdriver-maintenance.service <<_EOF
-[Unit]
-Description=Daily stackdriver maintenance period
-After=network-online.target
-Wants=network-online.target
-[Service]
-Type=oneshot
-ExecStart=/bin/sh /usr/local/sbin/unifi-stackdriver-maintenance.sh
-_EOF
-
-	cat > /etc/systemd/system/unifi-stackdriver-maintenance.timer <<_EOF
-[Unit]
-Description=Daily stackdriver maintenance timer
-[Timer]
-OnCalendar=00:00
-[Install]
-WantedBy=timers.target
-_EOF
-	systemctl daemon-reload
-	systemctl enable unifi-stackdriver-maintenance.timer --now
-	echo "stackdriver maintenance windows set up"
-fi
 
 ###########################################################
 #
