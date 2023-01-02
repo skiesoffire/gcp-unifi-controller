@@ -292,21 +292,21 @@ exit 0
 _EOF
 	chmod a+x /usr/local/sbin/unifidb-repair.sh
 
-	cat > /etc/systemd/system/unifidb-repair.service <<_EOF
-[Unit]
-Description=Repair UniFi MongoDB database at boot
-Before=unifi.service mongodb.service
-After=network-online.target
-Wants=network-online.target
-[Service]
-Type=oneshot
-ExecStart=/usr/local/sbin/unifidb-repair.sh
-[Install]
-WantedBy=multi-user.target
-_EOF
-	systemctl enable unifidb-repair.service
-	echo "Unifi DB autorepair set up"
-fi
+#	cat > /etc/systemd/system/unifidb-repair.service <<_EOF
+#[Unit]
+#Description=Repair UniFi MongoDB database at boot
+#Before=unifi.service mongodb.service
+#After=network-online.target
+#Wants=network-online.target
+#[Service]
+#Type=oneshot
+#ExecStart=/usr/local/sbin/unifidb-repair.sh
+#[Install]
+#WantedBy=multi-user.target
+#_EOF
+#	systemctl enable unifidb-repair.service
+#	echo "Unifi DB autorepair set up"
+#fi
 
 ###########################################################
 #
