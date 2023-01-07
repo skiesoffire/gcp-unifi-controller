@@ -542,7 +542,7 @@ echo running version report...
 echo essentials:
 java -version
 mongod -version
-echo unifi: $(/usr/lib/unifi/bin/ubnt-apttool showpkgver unifi)
+echo unifi: "$(/usr/lib/unifi/bin/ubnt-apttool showpkgver unifi)"
 
 echo secondary:
 dpkg-query -W haveged lighttpd ca-certificates fail2ban
