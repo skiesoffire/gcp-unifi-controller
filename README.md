@@ -1,6 +1,8 @@
-This is a collection of scripts and programs I have written for Ubiquiti Unifi products.
+<h1>gcp-unifi-controller</h1>
 
-Feel free to explore!
+Forked off of <https://github.com/riihikallio/unifi>
 
-For instructions on how to set up an UniFi controller on Google Cloud Platform see
-https://metis.fi/en/2018/02/unifi-on-gcp/
+More details to come...
+
+For instructions on how to set up an UniFi controller:
+<https://metis.fi/en/2018/02/unifi-on-gcp/>
