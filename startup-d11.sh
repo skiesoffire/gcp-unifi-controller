@@ -251,8 +251,8 @@ _EOF
 #WantedBy=multi-user.target
 #_EOF
 #	systemctl enable unifidb-repair.service
-#	echo "Unifi DB autorepair set up"
-#fi
+	echo "Unifi DB autorepair set up"
+fi
 
 ###########################################################
 #
