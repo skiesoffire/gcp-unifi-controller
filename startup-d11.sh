@@ -324,6 +324,7 @@ fi
 # Set up Let's Encrypt
 #
 dnsname=$(curl -fs -H "Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/attributes/dns-name")
+extIP=\$(curl -fs -H "Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip")
 if [ -z ${dnsname} ]; then exit 0; fi
 privkey=/etc/letsencrypt/live/${dnsname}/privkey.pem
 pubcrt=/etc/letsencrypt/live/${dnsname}/cert.pem
