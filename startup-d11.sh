@@ -1,5 +1,5 @@
 #! /bin/bash
-# shellcheck disable=SC2086,SC2034
+# shellcheck disable=SC2086,SC2154
 
 # Version 2.0.0
 # This is a startup script for UniFi Controller on Debian based Google Compute Engine instances.
