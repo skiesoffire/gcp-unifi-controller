@@ -1,6 +1,7 @@
 #! /bin/bash
 # shellcheck disable=SC2086,SC2154
 
+
 # Version 2.0.0
 # This is a startup script for UniFi Controller on Debian based Google Compute Engine instances.
 # For instructions and how-to:  https://metis.fi/en/2018/02/unifi-on-gcp/
@@ -284,6 +285,7 @@ _EOF
 	systemctl start unifi-backup.timer
 	echo "Backups to ${bucket} set up"
 fi
+
 # also sync backup files on startup so we can restore from backup on first boot
 /usr/bin/gsutil -m rsync -r -d gs://$bucket /var/lib/unifi/backup
 
@@ -503,6 +505,7 @@ if [ ! -d /etc/letsencrypt/live/${dnsname} ]; then
 		systemctl start certbotrun.timer
 	fi
 fi
+
 # Install GCP Ops agent & configure
 curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
 sudo bash add-google-cloud-ops-agent-repo.sh --also-install
